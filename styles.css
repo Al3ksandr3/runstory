@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
+
+:root {
+  height: 100%;
+  font-size: 62.5%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  padding: 0.5% 0;
+  background-color: rgb(44, 88, 104);
+}
+
+.header-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.header {
+  background-color: rgb(82, 73, 76);
+  color: white;
+  border-radius: 2rem 2rem 0 0;
+  text-align: center;
+  padding: 0.1rem 1.5rem;
+  font-size: 2rem;
+  border: 0.1rem solid gold;
+  border-bottom: none;
+}
+
+.container {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  max-width: 95%;
+  height: 95%;
+  background-color: rgb(82, 73, 76);
+  border-radius: 2rem;
+  padding: 1rem;
+  border: 0.1rem solid gold;
+}
+
+.map {
+  width: 100%;
+  background-color: black;
+  height: 60%;
+  border-radius: 2rem;
+}
+
+.workouts {
+  border-radius: 2rem;
+  margin-top: 1rem;
+  height: 40%;
+  width: 100%;
+  background-color: white;
+}
+
+/* overriding default styles of Leaflet */
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background-color: rgb(44, 88, 104);
+  color: white;
+  font-size: 1rem;
+  max-width: 20rem;
+  max-height: 10rem;
+  text-align: center;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: gold;
+  font-weight: bold;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: rgb(199, 0, 0);
+}
