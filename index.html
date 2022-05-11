@@ -27,31 +27,53 @@
     <div class="container">
       <div id="map" class="map"></div>
       <div class="workouts">
-        <div class="formAndworkouts-container">
-          <form class="workout-form">
-            <p class="workout-form--header">Record your RunStory:</p>
-            <label class="workout-form--labels">
-              <div>Distance:</div>
+        <form class="workout-form">
+          <p class="workout-form--header">Record your RunStory:</p>
+          <label class="workout-form--labels">
+            <div>Distance:</div>
+            <div class="workout-form--inputAndicon">
               <input
+                class="workout-form--inputs"
+                type="text"
                 placeholder="km"
-                class="workout-form--inputs"
-                type="text"
               />
-            </label>
-            <label class="workout-form--labels">
-              <div>Duration:</div>
+              <img
+                src="./assets/distance.png"
+                alt="Calendar icon"
+                class="workout-form--icons"
+              />
+            </div>
+          </label>
+          <label class="workout-form--labels">
+            <div>Duration:</div>
+            <div class="workout-form--inputAndicon">
               <input
-                placeholder="min"
                 class="workout-form--inputs"
                 type="text"
+                placeholder="min"
               />
-            </label>
-            <label class="workout-form--labels">
-              <div>Date:</div>
+              <img
+                src="./assets/chronometer.png"
+                alt="Calendar icon"
+                class="workout-form--icons"
+              />
+            </div>
+          </label>
+          <label class="workout-form--labels">
+            <div>Date:</div>
+            <div class="workout-form--inputAndicon">
               <input class="workout-form--inputs" type="date" />
-            </label>
-            <button class="workout-form--submitbtn">Submit</button>
-          </form>
+              <img
+                src="./assets/calendar.png"
+                alt="Calendar icon"
+                class="workout-form--icons"
+              />
+            </div>
+          </label>
+          <button class="workout-form--submitbtn">Submit</button>
+        </form>
+        <div class="workout-notes">
+          <p class="workout-notes--header">RunStories notes:</p>
         </div>
       </div>
     </div>

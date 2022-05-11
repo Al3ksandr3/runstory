@@ -1,8 +1,10 @@
 const mapContainer = document.querySelector(".map");
-const list = document.querySelector(".workouts");
+const workoutsPane = document.querySelector(".workouts");
 const rem = Number.parseInt(
   getComputedStyle(document.querySelector(":root")).fontSize
 );
+
+const notes = document.querySelector(".workout-notes");
 
 const ids = [];
 
@@ -37,10 +39,59 @@ class App {
     minHeight: rem * 3,
     minWidth: rem * 12,
   };
+  #notesArea;
+  #notesText;
+  #editBtn;
+  #submitBtn;
+  #notes;
 
   constructor() {
+    // getting use position
+
     this._getUserPosition();
+
+    // creating textarea for notes
+
+    this.#notesArea = document.createElement("textarea");
+    this.#notesArea.rows = "10";
+    this.#notesArea.cols = "70";
+    this.#notesArea.classList.add("workout-notes--textarea", "hidden");
+    notes.appendChild(this.#notesArea);
+
+    this.#submitBtn = document.createElement("button");
+    this.#submitBtn.classList.add("submitBtn", "hidden");
+    this.#submitBtn.textContent = "Submit";
+
+    this.#submitBtn.addEventListener("click", this._renderNotesText.bind(this));
+
+    notes.appendChild(this.#submitBtn);
+
+    // creating paragraph for notes
+
+    this.#notesText = document.createElement("p");
+    this.#notesText.className = "workout-notes--text";
+    notes.appendChild(this.#notesText);
+
+    this.#editBtn = document.createElement("button");
+    this.#editBtn.classList.add("editBtn");
+    this.#editBtn.textContent = "Edit";
+
+    this.#editBtn.addEventListener("click", this._renderNotesArea.bind(this));
+
+    notes.appendChild(this.#editBtn);
+
+    // checking notes in the local storage
+
+    window.localStorage.getItem("notes") === null
+      ? (this.#notes = "")
+      : (this.#notes = JSON.parse(window.localStorage.getItem("notes")));
+
+    this.#notesText.innerText = this.#notes;
   }
+
+  //
+  // Methods start from here
+  //
 
   _getUserPosition() {
     navigator.geolocation.getCurrentPosition(
@@ -96,9 +147,30 @@ class App {
     targetMarker.bindPopup(L.popup(options).setContent(content)).openPopup();
   }
 
-  _showForm() {}
-
   _addingWorkout() {}
+
+  _renderNotesArea(clickE) {
+    this.#notesArea.value = this.#notes;
+
+    this.#notesText.classList.add("hidden");
+    this.#editBtn.classList.add("hidden");
+
+    this.#notesArea.classList.remove("hidden");
+    this.#submitBtn.classList.remove("hidden");
+  }
+
+  _renderNotesText(clickE) {
+    this.#notes = this.#notesArea.value;
+    this.#notesText.innerText = this.#notes;
+
+    this.#notesText.classList.remove("hidden");
+    this.#editBtn.classList.remove("hidden");
+
+    this.#notesArea.classList.add("hidden");
+    this.#submitBtn.classList.add("hidden");
+
+    window.localStorage.setItem("notes", JSON.stringify(this.#notes));
+  }
 }
 
 const appInstance = new App();

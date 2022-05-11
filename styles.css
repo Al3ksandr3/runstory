@@ -64,18 +64,11 @@ body {
   background-color: white;
 }
 
-.formAndworkouts-container {
+.workout-form {
   height: 100%;
   width: 30%;
-  /* background-color: green; */
-  padding: 0.5rem;
-}
-
-.workout-form {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
   background-color: rgb(82, 73, 76);
   border-radius: 2rem;
   padding: 1rem;
@@ -85,11 +78,24 @@ body {
 
 .workout-form--header {
   font-weight: 500;
+  font-size: 1.5rem;
 }
 
 .workout-form--labels {
   font-size: 1.5rem;
   margin-top: 1.5rem;
+}
+
+.workout-form--inputAndicon {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.workout-form--icons {
+  width: 2.5rem;
+  margin-left: 1.5rem;
 }
 
 .workout-form--inputs {
@@ -111,7 +117,7 @@ body {
   font-weight: 500;
   font-size: 1.5rem;
   width: 40%;
-  margin-top: 2rem;
+  margin-top: 3rem;
   border: none;
   border-radius: 0.5rem;
   background-color: gold;
@@ -120,6 +126,56 @@ body {
 
 .workout-form--submitbtn:hover {
   opacity: 0.8;
+}
+
+/* .workouts {
+    display: flex;
+    align-items: center;
+    border-radius: 2rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    height: 40%;
+    width: 100%;
+    background-color: white;
+  } */
+
+.workout-notes {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  height: 100%;
+  border-radius: 2rem;
+  padding: 1rem;
+  margin-left: 1%;
+  background-color: rgb(82, 73, 76);
+}
+
+.workout-notes--header {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: white;
+}
+
+.workout-notes--textarea {
+  resize: none;
+  margin-top: 1rem;
+  border-radius: 2rem;
+  outline: none;
+  padding: 1rem;
+  border: none;
+  font-size: 1.5rem;
+  height: 21rem;
+}
+
+.workout-notes--text {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  border-radius: 2rem;
+  border: 0.2rem solid white;
+  padding: 1rem;
+  color: white;
+  height: 21rem;
+  width: 100%;
 }
 
 /* overriding default styles of Leaflet */
@@ -155,4 +211,44 @@ body {
 .leaflet-touch .leaflet-control-layers,
 .leaflet-touch .leaflet-bar {
   border: none;
+}
+
+/* special classes */
+
+.hidden {
+  display: none;
+}
+
+.editBtn {
+  height: 2.5rem;
+  color: black;
+  font-weight: 500;
+  font-size: 1.5rem;
+  width: 40%;
+  margin-top: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: gold;
+  cursor: pointer;
+}
+
+.editBtn:hover {
+  opacity: 0.8;
+}
+
+.submitBtn {
+  height: 2.5rem;
+  color: black;
+  font-weight: 500;
+  font-size: 1.5rem;
+  width: 40%;
+  margin-top: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.submitBtn:hover {
+  opacity: 0.8;
 }
