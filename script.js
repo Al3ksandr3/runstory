@@ -157,6 +157,8 @@ class App {
 
     this.#notesArea.classList.remove("hidden");
     this.#submitBtn.classList.remove("hidden");
+
+    this.#notesArea.focus();
   }
 
   _renderNotesText(clickE) {
