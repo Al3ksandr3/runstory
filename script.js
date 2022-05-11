@@ -4,6 +4,28 @@ const rem = Number.parseInt(
   getComputedStyle(document.querySelector(":root")).fontSize
 );
 
+const ids = [];
+
+class Workout {
+  constructor(type, distance, duration) {
+    const newId = Math.floor(Math.random() * 1_000_000);
+    while (true) {
+      if (ids.includes(newId)) {
+        newId = Math.floor(Math.random() * 1_000_000);
+      } else {
+        this.id = newId;
+        ids.push(newId);
+        break;
+      }
+    }
+    this.type = type;
+    this.date = new Date();
+    this.distance = distance;
+    this.duration = duration;
+    this.avrSpeed = distance / duration;
+  }
+}
+
 class App {
   #userPosition;
   #targetMap;
@@ -73,6 +95,10 @@ class App {
   _popupRender(targetMarker, options, content) {
     targetMarker.bindPopup(L.popup(options).setContent(content)).openPopup();
   }
+
+  _showForm() {}
+
+  _addingWorkout() {}
 }
 
 const appInstance = new App();

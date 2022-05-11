@@ -22,11 +22,38 @@
   </head>
   <body>
     <div class="header-container">
-      <h1 class="header">Workstory - save history of your workouts</h1>
+      <h1 class="header">RunStory - prepare yourself for marathons</h1>
     </div>
     <div class="container">
       <div id="map" class="map"></div>
-      <div class="workouts"></div>
+      <div class="workouts">
+        <div class="formAndworkouts-container">
+          <form class="workout-form">
+            <p class="workout-form--header">Record your RunStory:</p>
+            <label class="workout-form--labels">
+              <div>Distance:</div>
+              <input
+                placeholder="km"
+                class="workout-form--inputs"
+                type="text"
+              />
+            </label>
+            <label class="workout-form--labels">
+              <div>Duration:</div>
+              <input
+                placeholder="min"
+                class="workout-form--inputs"
+                type="text"
+              />
+            </label>
+            <label class="workout-form--labels">
+              <div>Date:</div>
+              <input class="workout-form--inputs" type="date" />
+            </label>
+            <button class="workout-form--submitbtn">Submit</button>
+          </form>
+        </div>
+      </div>
     </div>
   </body>
 </html>
