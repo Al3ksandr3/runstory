@@ -109,7 +109,6 @@ class App {
       "submit",
       function (submitE) {
         submitE.preventDefault();
-
         this._generateWorkout();
       }.bind(this)
     );
@@ -118,9 +117,9 @@ class App {
       "click",
       function (clickE) {
         this.#mapEvent = undefined;
-        discard.style.display = "none";
         formHidder.style.height = "100%";
         formHint.style.display = "block";
+        discard.style.display = "none";
       }.bind(this)
     );
 
@@ -268,6 +267,7 @@ class App {
     distanceInput.value = "";
     durationInput.value = "";
     dateInput.value = "";
+    discard.style.display = "none";
     formHidder.style.height = "100%";
     formHint.style.display = "block";
 
