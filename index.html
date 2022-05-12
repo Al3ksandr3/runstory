@@ -33,7 +33,7 @@
             <div>Distance:</div>
             <div class="workout-form--inputAndicon">
               <input
-                class="workout-form--inputs"
+                class="workout-form--inputs distance"
                 type="text"
                 placeholder="km"
               />
@@ -48,7 +48,7 @@
             <div>Duration:</div>
             <div class="workout-form--inputAndicon">
               <input
-                class="workout-form--inputs"
+                class="workout-form--inputs duration"
                 type="text"
                 placeholder="min"
               />
@@ -62,7 +62,7 @@
           <label class="workout-form--labels">
             <div>Date:</div>
             <div class="workout-form--inputAndicon">
-              <input class="workout-form--inputs" type="date" />
+              <input class="workout-form--inputs date" type="date" />
               <img
                 src="./assets/calendar.png"
                 alt="Calendar icon"
@@ -70,25 +70,20 @@
               />
             </div>
           </label>
-          <button class="workout-form--submitbtn">Submit</button>
+          <button
+            type="submit"
+            disabled
+            class="workout-form--submitbtn disabled"
+          >
+            Submit
+          </button>
         </form>
         <div class="workout-notes">
           <p class="workout-notes--header">RunStories notes:</p>
         </div>
         <div class="workouts-list-container">
           <p class="workouts-list--header">Your RunStories:</p>
-          <ul class="workouts-list--main">
-            <li class="runstory">
-              <h4 class="runstory--header">Runstory</h4>
-              <div class="runstory--content">
-                <span class="runstory--datapiece">
-                  <img src="/assets/calendar.png" alt="gfdfg" />
-                  <p class="runstory--datapiece--number">21</p>
-                  <p class="runstory--datapiece--unit">KM</p>
-                </span>
-              </div>
-            </li>
-          </ul>
+          <ul class="workouts-list--main"></ul>
         </div>
       </div>
     </div>

@@ -1,15 +1,56 @@
+const listItem = `<li class="runstory">
+<h4 class="runstory--header">Runstory</h4>
+<div class="runstory--content">
+  <span class="runstory--datapiece">
+    <img
+      class="runstory--datapiece--icon"
+      src="./assets/runner.png"
+      alt="Icon of runner."
+    />
+    <p class="runstory--datapiece--number">21</p>
+    <p class="runstory--datapiece--unit">km</p>
+  </span>
+  <span class="runstory--datapiece margin">
+    <img
+      class="runstory--datapiece--icon"
+      src="./assets/clock.png"
+      alt="Icon of clock."
+    />
+    <p class="runstory--datapiece--number">21</p>
+    <p class="runstory--datapiece--unit">min</p>
+  </span>
+  <span class="runstory--datapiece margin">
+    <img
+      class="runstory--datapiece--icon"
+      src="./assets/speedometer.png"
+      alt="Icon of speedometer"
+    />
+    <p class="runstory--datapiece--number">21</p>
+    <p class="runstory--datapiece--unit">km/min</p>
+  </span>
+</div>
+</li>
+`;
+
 const mapContainer = document.querySelector(".map");
 const workoutsPane = document.querySelector(".workouts");
 const rem = Number.parseInt(
   getComputedStyle(document.querySelector(":root")).fontSize
 );
 
+const distanceInput = document.querySelector(".distance");
+const durationInput = document.querySelector(".duration");
+const dateInput = document.querySelector(".date");
+
+const workoutForm = document.querySelector(".workout-form");
+const formSubmitBtn = document.querySelector(".workout-form--submitbtn");
+
 const notes = document.querySelector(".workout-notes");
 
 const ids = [];
 
 class Workout {
-  constructor(type, distance, duration) {
+  constructor(distance, duration) {
     const newId = Math.floor(Math.random() * 1_000_000);
     while (true) {
       if (ids.includes(newId)) {
@@ -20,7 +61,6 @@ class Workout {
         break;
       }
     }
-    this.type = type;
     this.date = new Date();
     this.distance = distance;
     this.duration = duration;
@@ -31,6 +71,7 @@ class Workout {
 class App {
   #userPosition;
   #targetMap;
+  #mapEvent;
   #popupOpts = {
     autoClose: false,
     closeOnClick: false,
@@ -44,6 +85,9 @@ class App {
   #editBtn;
   #submitBtn;
   #notes;
+  #distanceFieldStatus;
+  #durationFieldStatus;
+  #dateFieldStatus = true;
 
   constructor() {
     // getting use position
@@ -80,6 +124,17 @@ class App {
 
     notes.appendChild(this.#editBtn);
 
+    // adding event listeners to form and separate input fields
+
+    workoutForm.addEventListener(
+      "submit",
+      function (submitE) {
+        submitE.preventDefault();
+
+        this._generateWorkout();
+      }.bind(this)
+    );
+
     // checking notes in the local storage
 
     window.localStorage.getItem("notes") === null
@@ -114,7 +169,6 @@ class App {
   }
 
   _renderingMap(...coordinates) {
-    console.log(coordinates);
     this.#targetMap = L.map("map").setView(coordinates, 15);
 
     L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
@@ -126,11 +180,26 @@ class App {
       this.#targetMap,
       coordinates,
       "./initposicon.png",
-      "Your current position"
+      "Your current position",
+      this.#popupOpts
+    );
+
+    this.#targetMap.addEventListener(
+      "click",
+      function (mapE) {
+        this.#mapEvent = mapE;
+        workoutForm.style.border = "0.4rem solid gold";
+
+        distanceInput.focus();
+
+        setTimeout(() => {
+          workoutForm.style.border = "none";
+        }, 300);
+      }.bind(this)
     );
   }
 
-  _markerRender(targetMap, coords, url, popupContent) {
+  _markerRender(targetMap, coords, url, popupContent, popupOptions) {
     const marker = L.marker(coords, {
       icon: L.icon({
         iconUrl: url,
@@ -140,7 +209,7 @@ class App {
 
     // adding popup to a marker
 
-    this._popupRender(marker, this.#popupOpts, popupContent);
+    this._popupRender(marker, popupOptions, popupContent);
   }
 
   _popupRender(targetMarker, options, content) {
@@ -172,6 +241,17 @@ class App {
     this.#submitBtn.classList.add("hidden");
 
     window.localStorage.setItem("notes", JSON.stringify(this.#notes));
+  }
+
+  _generateWorkout() {
+    const { lat, lng } = this.#mapEvent.latlng;
+    this._markerRender(
+      this.#targetMap,
+      [lat, lng],
+      "./initposicon.png",
+      "You clicked here",
+      this.#popupOpts
+    );
   }
 }
 

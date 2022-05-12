@@ -4,7 +4,7 @@
   height: 100%;
   font-size: 62.5%;
   --main-color: rgb(44, 88, 104);
-  --popup-color: rgb(82, 73, 76);
+  --workout-color: rgba(102, 106, 107, 0.6);
 }
 
 * {
@@ -66,6 +66,10 @@ body {
   width: 100%;
   background-color: white;
 }
+
+/*  */
+/* form styles */
+/*  */
 
 .workout-form {
   height: 100%;
@@ -131,6 +135,10 @@ body {
   opacity: 0.8;
 }
 
+/*  */
+/* notes styles */
+/*  */
+
 .workout-notes {
   display: flex;
   flex-direction: column;
@@ -169,6 +177,10 @@ body {
   width: 100%;
 }
 
+/*  */
+/* runstories styles */
+/*  */
+
 .workouts-list-container {
   display: flex;
   flex-direction: column;
@@ -190,18 +202,50 @@ body {
 }
 
 .runstory {
+  border: 0.1rem solid gold;
+  border-left: 0.5rem solid gold;
+  width: 80%;
+  border-radius: 1rem;
+  padding: 1rem;
   color: white;
+  background-color: var(--workout-color);
   margin-top: 1rem;
 }
 
 .runstory--header {
   font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.runstory--content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .runstory--datapiece {
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: 18%;
+  justify-content: space-evenly;
+}
+
+.runstory--datapiece.margin {
+  margin-left: 5%;
+}
+
+.runstory--datapiece--icon {
+  width: 2rem;
+}
+
+.runstory--datapiece--number {
+  font-size: 1.4rem;
+}
+
+.runstory--datapiece--unit {
+  font-size: 1.4rem;
 }
 
 /* overriding default styles of Leaflet */
@@ -215,6 +259,10 @@ body {
   max-width: 20rem;
   max-height: 10rem;
   text-align: center;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.7rem;
 }
 
 .leaflet-container a.leaflet-popup-close-button {
@@ -272,10 +320,19 @@ body {
   margin-top: 1rem;
   border: none;
   border-radius: 0.5rem;
-  background-color: white;
+  background-color: yellowgreen;
   cursor: pointer;
 }
 
 .submitBtn:hover {
   opacity: 0.8;
+}
+
+[disabled] {
+  cursor: initial;
+  background-color: aliceblue;
+}
+
+[disabled]:hover {
+  opacity: 1;
 }
