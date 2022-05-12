@@ -1,36 +1,14 @@
-const listItem = `<li class="runstory">
-<h4 class="runstory--header">Runstory</h4>
-<div class="runstory--content">
-  <span class="runstory--datapiece">
-    <img
-      class="runstory--datapiece--icon"
-      src="./assets/runner.png"
-      alt="Icon of runner."
-    />
-    <p class="runstory--datapiece--number">21</p>
-    <p class="runstory--datapiece--unit">km</p>
-  </span>
-  <span class="runstory--datapiece margin">
-    <img
-      class="runstory--datapiece--icon"
-      src="./assets/clock.png"
-      alt="Icon of clock."
-    />
-    <p class="runstory--datapiece--number">21</p>
-    <p class="runstory--datapiece--unit">min</p>
-  </span>
-  <span class="runstory--datapiece margin">
-    <img
-      class="runstory--datapiece--icon"
-      src="./assets/speedometer.png"
-      alt="Icon of speedometer"
-    />
-    <p class="runstory--datapiece--number">21</p>
-    <p class="runstory--datapiece--unit">km/min</p>
-  </span>
-</div>
-</li>
-`;
+"use strict";
+
+// helper variables
+// prettier-ignore
+const months = ['January', 'February', 'March', 'April', 'May','June','July','August','September','October', 'November','December']
+const ids = [];
+const formHidder = document.querySelector(".form-hidder");
+const formHint = document.querySelector(".form-hidder--hint");
+const discard = document.querySelector(".discard");
+const discardBtn = document.querySelector(".discard--btn");
+//
 
 const mapContainer = document.querySelector(".map");
 const workoutsPane = document.querySelector(".workouts");
@@ -47,10 +25,10 @@ const formSubmitBtn = document.querySelector(".workout-form--submitbtn");
 
 const notes = document.querySelector(".workout-notes");
 
-const ids = [];
+const workoutList = document.querySelector(".workouts-list--main");
 
 class Workout {
-  constructor(distance, duration) {
+  constructor(distance, duration, date) {
     const newId = Math.floor(Math.random() * 1_000_000);
     while (true) {
       if (ids.includes(newId)) {
@@ -61,7 +39,7 @@ class Workout {
         break;
       }
     }
-    this.date = new Date();
+    this.date = new Date(date.year, date.month - 1, date.day);
     this.distance = distance;
     this.duration = duration;
     this.avrSpeed = distance / duration;
@@ -85,9 +63,10 @@ class App {
   #editBtn;
   #submitBtn;
   #notes;
-  #distanceFieldStatus;
-  #durationFieldStatus;
-  #dateFieldStatus = true;
+  #distanceField;
+  #durationField;
+  #dateField;
+  #focusedField;
 
   constructor() {
     // getting use position
@@ -134,6 +113,33 @@ class App {
         this._generateWorkout();
       }.bind(this)
     );
+
+    discardBtn.addEventListener(
+      "click",
+      function (clickE) {
+        this.#mapEvent = undefined;
+        discard.style.display = "none";
+        formHidder.style.height = "100%";
+        formHint.style.display = "block";
+      }.bind(this)
+    );
+
+    // [distanceInput, durationInput, dateInput].forEach((element) => {
+    //   element.addEventListener(
+    //     "focus",
+    //     function (focusE) {
+    //       this.#focusedField = focusE.target;
+    //     }.bind(this)
+    //   );
+    // });
+
+    // document.addEventListener(
+    //   "keypress",
+    //   function (keyPressE) {
+    //     this.#focusedField.value = this.#focusedField.value + keyPressE.key;
+    //     console.log(distanceInput.value);
+    //   }.bind(this)
+    // );
 
     // checking notes in the local storage
 
@@ -189,7 +195,9 @@ class App {
       function (mapE) {
         this.#mapEvent = mapE;
         workoutForm.style.border = "0.4rem solid gold";
-
+        formHidder.style.height = "0%";
+        formHint.style.display = "none";
+        discard.style.display = "flex";
         distanceInput.focus();
 
         setTimeout(() => {
@@ -209,14 +217,12 @@ class App {
 
     // adding popup to a marker
 
-    this._popupRender(marker, popupOptions, popupContent);
+    this._popupRender(marker, popupContent, popupOptions);
   }
 
-  _popupRender(targetMarker, options, content) {
+  _popupRender(targetMarker, content, options) {
     targetMarker.bindPopup(L.popup(options).setContent(content)).openPopup();
   }
-
-  _addingWorkout() {}
 
   _renderNotesArea(clickE) {
     this.#notesArea.value = this.#notes;
@@ -244,6 +250,27 @@ class App {
   }
 
   _generateWorkout() {
+    const dateSeparator = dateInput.value.split("-");
+
+    const date = {
+      year: dateSeparator[0],
+      month: dateSeparator[1],
+      day: dateSeparator[2],
+    };
+
+    const workout = new Workout(distanceInput.value, durationInput.value, date);
+
+    workoutList.insertAdjacentHTML(
+      "afterbegin",
+      this._generateListItem(workout)
+    );
+
+    distanceInput.value = "";
+    durationInput.value = "";
+    dateInput.value = "";
+    formHidder.style.height = "100%";
+    formHint.style.display = "block";
+
     const { lat, lng } = this.#mapEvent.latlng;
     this._markerRender(
       this.#targetMap,
@@ -252,6 +279,46 @@ class App {
       "You clicked here",
       this.#popupOpts
     );
+  }
+
+  _generateListItem(runstory) {
+    return `<li class="runstory">
+    <h4 class="runstory--header">Runstory on ${
+      months[runstory.date.getMonth()]
+    } ${runstory.date.getDate()}, ${runstory.date.getFullYear()}</h4>
+    <div class="runstory--content">
+      <span class="runstory--datapiece">
+        <img
+          class="runstory--datapiece--icon"
+          src="./assets/runner.png"
+          alt="Icon of runner."
+        />
+        <p class="runstory--datapiece--number">${runstory.distance}</p>
+        <p class="runstory--datapiece--unit">km</p>
+      </span>
+      <span class="runstory--datapiece margin">
+        <img
+          class="runstory--datapiece--icon"
+          src="./assets/clock.png"
+          alt="Icon of clock."
+        />
+        <p class="runstory--datapiece--number">${runstory.duration}</p>
+        <p class="runstory--datapiece--unit">min</p>
+      </span>
+      <span class="runstory--datapiece margin">
+        <img
+          class="runstory--datapiece--icon"
+          src="./assets/speedometer.png"
+          alt="Icon of speedometer"
+        />
+        <p class="runstory--datapiece--number">${runstory.avrSpeed.toFixed(
+          1
+        )}</p>
+        <p class="runstory--datapiece--unit">km/min</p>
+      </span>
+    </div>
+    </li>
+    `;
   }
 }
 
