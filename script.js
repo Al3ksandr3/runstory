@@ -63,10 +63,6 @@ class App {
   #editBtn;
   #submitBtn;
   #notes;
-  #distanceField;
-  #durationField;
-  #dateField;
-  #focusedField;
 
   constructor() {
     // getting use position
@@ -103,14 +99,19 @@ class App {
 
     notes.appendChild(this.#editBtn);
 
-    // adding event listeners to form and separate input fields
+    // adding event listeners to form and and discard button
 
     workoutForm.addEventListener(
       "submit",
       function (submitE) {
         submitE.preventDefault();
-
-        this._generateWorkout();
+        discard.style.display = "none";
+        if (
+          this._validateInput(distanceInput.value, distanceInput) &&
+          this._validateInput(durationInput.value, durationInput) &&
+          this._validateInput(dateInput.value, dateInput)
+        )
+          this._generateWorkout();
       }.bind(this)
     );
 
@@ -124,24 +125,7 @@ class App {
       }.bind(this)
     );
 
-    // [distanceInput, durationInput, dateInput].forEach((element) => {
-    //   element.addEventListener(
-    //     "focus",
-    //     function (focusE) {
-    //       this.#focusedField = focusE.target;
-    //     }.bind(this)
-    //   );
-    // });
-
-    // document.addEventListener(
-    //   "keypress",
-    //   function (keyPressE) {
-    //     this.#focusedField.value = this.#focusedField.value + keyPressE.key;
-    //     console.log(distanceInput.value);
-    //   }.bind(this)
-    // );
-
-    // checking notes in the local storage
+    // checking notes content in the local storage
 
     window.localStorage.getItem("notes") === null
       ? (this.#notes = "")
@@ -151,7 +135,7 @@ class App {
   }
 
   //
-  // Methods start from here
+  // Geolocation position request
   //
 
   _getUserPosition() {
@@ -161,11 +145,19 @@ class App {
     );
   }
 
+  //
+  // Geolocation position success
+  //
+
   _gettingUserPosition(geolocationPosition) {
     this.#userPosition = geolocationPosition.coords;
     const { latitude, longitude } = this.#userPosition;
     this._renderingMap(latitude, longitude);
   }
+
+  //
+  // Geolocation position error
+  //
 
   _userPositionError(geolocationPositionError) {
     alert(
@@ -174,6 +166,9 @@ class App {
     this.#userPosition = null;
   }
 
+  //
+  // Leaflet map render
+  //
   _renderingMap(...coordinates) {
     this.#targetMap = L.map("map").setView(coordinates, 15);
 
@@ -207,6 +202,10 @@ class App {
     );
   }
 
+  //
+  // RunStory marker render
+  //
+
   _markerRender(targetMap, coords, url, popupContent, popupOptions) {
     const marker = L.marker(coords, {
       icon: L.icon({
@@ -220,9 +219,17 @@ class App {
     this._popupRender(marker, popupContent, popupOptions);
   }
 
+  //
+  // RunStory popup render
+  //
+
   _popupRender(targetMarker, content, options) {
     targetMarker.bindPopup(L.popup(options).setContent(content)).openPopup();
   }
+
+  //
+  // Notes textarea
+  //
 
   _renderNotesArea(clickE) {
     this.#notesArea.value = this.#notes;
@@ -236,6 +243,10 @@ class App {
     this.#notesArea.focus();
   }
 
+  //
+  // Notes text
+  //
+
   _renderNotesText(clickE) {
     this.#notes = this.#notesArea.value;
     this.#notesText.innerText = this.#notes;
@@ -248,6 +259,10 @@ class App {
 
     window.localStorage.setItem("notes", JSON.stringify(this.#notes));
   }
+
+  //
+  // RunStory data generation
+  //
 
   _generateWorkout() {
     const dateSeparator = dateInput.value.split("-");
@@ -280,6 +295,10 @@ class App {
       this.#popupOpts
     );
   }
+
+  //
+  // Adding RunStory to the list
+  //
 
   _generateListItem(runstory) {
     return `<li class="runstory">
@@ -319,6 +338,52 @@ class App {
     </div>
     </li>
     `;
+  }
+
+  _validateInput(val, element) {
+    if (element.type === "date")
+      return val.length === 0 ? this._showErrorPopup(element) : true;
+    return isNaN(Number(val)) || val.length === 0
+      ? this._showErrorPopup(element)
+      : true;
+  }
+
+  _showErrorPopup(element) {
+    const closestPar = element.closest(".workout-form--labels");
+    let fieldName = element.classList[1];
+    fieldName = fieldName[0].toUpperCase() + fieldName.slice(1);
+
+    const fieldType = element.type;
+
+    const errorText = `Please, input ${
+      fieldType === "date"
+        ? ` your RunStory date in the "${fieldName}" field.`
+        : `positive integer value in the "${fieldName}" field.`
+    }`;
+
+    closestPar.insertAdjacentHTML(
+      "beforeend",
+      `<span class="validation-error">
+    <img
+      class="validation-error--icon"
+      src="./assets/close.png"
+      alt="Close icon"
+    />
+    <p class="validation-error--text">${errorText}</p>
+    <span class="validation-error--pointer"></span>
+  </span>`
+    );
+    element.value = "";
+    element.focus();
+    setTimeout(() => {
+      const errorMessage = document.querySelector(".validation-error");
+      errorMessage.style.opacity = "0";
+      setTimeout(() => {
+        errorMessage.remove();
+      }, 1100);
+    }, 2000);
+
+    return;
   }
 }
 

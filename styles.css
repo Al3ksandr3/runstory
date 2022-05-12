@@ -126,6 +126,11 @@ body {
   background-color: gold;
   color: black;
   font-weight: bold;
+  cursor: pointer;
+}
+
+.discard--btn:hover {
+  opacity: 0.8;
 }
 
 .workout-form--header {
@@ -134,8 +139,49 @@ body {
 }
 
 .workout-form--labels {
+  position: relative;
   font-size: 1.5rem;
   margin-top: 1.5rem;
+}
+
+.validation-error {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: -2rem;
+  right: 5rem;
+  width: 40rem;
+  height: 3rem;
+  display: flex;
+  background-color: white;
+  color: black;
+  padding: 0.1rem 1rem;
+  border-radius: 1rem;
+  z-index: 2;
+  transition: opacity 1s ease-in-out;
+}
+
+.validation-error--icon {
+  width: 2rem;
+  margin-right: 0.5rem;
+  z-index: 3;
+}
+
+.validation-error--text {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.validation-error--pointer {
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  background-color: white;
+  z-index: 2;
+  top: 1.4rem;
+  left: 0.7rem;
+  transform: rotateZ(135deg);
+  transition: opacity 1s ease-in-out;
 }
 
 .workout-form--inputAndicon {
@@ -371,13 +417,4 @@ body {
 
 .submitBtn:hover {
   opacity: 0.8;
-}
-
-[disabled] {
-  cursor: initial;
-  background-color: aliceblue;
-}
-
-[disabled]:hover {
-  opacity: 1;
 }
