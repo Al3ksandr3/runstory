@@ -140,8 +140,49 @@ body {
 }
 
 .workout-form--labels {
+  position: relative;
   font-size: 1.5rem;
   margin-top: 1.5rem;
+}
+
+.validation-error {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: -2rem;
+  right: 5rem;
+  width: 40rem;
+  height: 3rem;
+  display: flex;
+  background-color: white;
+  color: black;
+  padding: 0.1rem 1rem;
+  border-radius: 1rem;
+  z-index: 2;
+  transition: opacity 1s ease-in-out;
+}
+
+.validation-error--icon {
+  width: 2rem;
+  margin-right: 0.5rem;
+  z-index: 3;
+}
+
+.validation-error--text {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.validation-error--pointer {
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  background-color: white;
+  z-index: 2;
+  top: 1.4rem;
+  left: 0.7rem;
+  transform: rotateZ(135deg);
+  transition: opacity 1s ease-in-out;
 }
 
 .workout-form--inputAndicon {
@@ -311,11 +352,12 @@ body {
   font-size: 1rem;
   max-width: 20rem;
   max-height: 10rem;
-  text-align: center;
 }
 
 .leaflet-popup-content-wrapper {
+  border-left: 0.4rem solid red;
   border-radius: 0.7rem;
+  text-align: center;
 }
 
 .leaflet-container a.leaflet-popup-close-button {
@@ -342,6 +384,13 @@ body {
 }
 
 /* special classes */
+
+.runStory--wrapper--tip {
+  background-color: rgb(45, 52, 57);
+  color: white;
+  border-left: 0.4rem solid yellowgreen;
+  font-weight: 300;
+}
 
 .hidden {
   display: none;
@@ -379,27 +428,4 @@ body {
 
 .submitBtn:hover {
   opacity: 0.8;
-}
-
-[disabled] {
-  cursor: initial;
-  background-color: aliceblue;
-}
-
-[disabled]:hover {
-  opacity: 1;
-}
-
-::-webkit-scrollbar {
-  width: 1rem;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: gold;
-  border-radius: 2rem;
-}
-
-::-webkit-scrollbar-button {
-  opacity: 0;
-  height: 0.5rem;
 }

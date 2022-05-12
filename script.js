@@ -55,18 +55,14 @@ class App {
     closeOnClick: false,
     closeOnEscapeKey: false,
     offset: [0, -20],
-    minHeight: rem * 3,
-    minWidth: rem * 12,
+    minHeight: rem * 2,
+    minWidth: rem * 10,
   };
   #notesArea;
   #notesText;
   #editBtn;
   #submitBtn;
   #notes;
-  #distanceField;
-  #durationField;
-  #dateField;
-  #focusedField;
 
   constructor() {
     // getting use position
@@ -103,13 +99,20 @@ class App {
 
     notes.appendChild(this.#editBtn);
 
-    // adding event listeners to form and separate input fields
+    // adding event listeners to form and and discard button
 
     workoutForm.addEventListener(
       "submit",
       function (submitE) {
         submitE.preventDefault();
-        this._generateWorkout();
+        if (
+          this._validateInput(distanceInput.value, distanceInput) &&
+          this._validateInput(durationInput.value, durationInput) &&
+          this._validateInput(dateInput.value, dateInput)
+        ) {
+          discard.style.display = "none";
+          this._generateWorkout();
+        }
       }.bind(this)
     );
 
@@ -119,28 +122,13 @@ class App {
         this.#mapEvent = undefined;
         formHidder.style.height = "100%";
         formHint.style.display = "block";
-        discard.style.display = "none";
+        distanceInput.value = "";
+        durationInput.value = "";
+        dateInput.value = "";
       }.bind(this)
     );
 
-    // [distanceInput, durationInput, dateInput].forEach((element) => {
-    //   element.addEventListener(
-    //     "focus",
-    //     function (focusE) {
-    //       this.#focusedField = focusE.target;
-    //     }.bind(this)
-    //   );
-    // });
-
-    // document.addEventListener(
-    //   "keypress",
-    //   function (keyPressE) {
-    //     this.#focusedField.value = this.#focusedField.value + keyPressE.key;
-    //     console.log(distanceInput.value);
-    //   }.bind(this)
-    // );
-
-    // checking notes in the local storage
+    // checking notes content in the local storage
 
     window.localStorage.getItem("notes") === null
       ? (this.#notes = "")
@@ -150,7 +138,7 @@ class App {
   }
 
   //
-  // Methods start from here
+  // Geolocation position request
   //
 
   _getUserPosition() {
@@ -160,11 +148,19 @@ class App {
     );
   }
 
+  //
+  // Geolocation position success
+  //
+
   _gettingUserPosition(geolocationPosition) {
     this.#userPosition = geolocationPosition.coords;
     const { latitude, longitude } = this.#userPosition;
     this._renderingMap(latitude, longitude);
   }
+
+  //
+  // Geolocation position error
+  //
 
   _userPositionError(geolocationPositionError) {
     alert(
@@ -173,6 +169,9 @@ class App {
     this.#userPosition = null;
   }
 
+  //
+  // Leaflet map render
+  //
   _renderingMap(...coordinates) {
     this.#targetMap = L.map("map").setView(coordinates, 15);
 
@@ -206,7 +205,11 @@ class App {
     );
   }
 
-  _markerRender(targetMap, coords, url, popupContent, popupOptions) {
+  //
+  // RunStory marker render
+  //
+
+  _markerRender(targetMap, coords, url, popupContent, popupOptions, storyRun) {
     const marker = L.marker(coords, {
       icon: L.icon({
         iconUrl: url,
@@ -216,12 +219,31 @@ class App {
 
     // adding popup to a marker
 
-    this._popupRender(marker, popupContent, popupOptions);
+    this._popupRender(marker, popupContent, popupOptions, storyRun);
   }
 
-  _popupRender(targetMarker, content, options) {
-    targetMarker.bindPopup(L.popup(options).setContent(content)).openPopup();
+  //
+  // RunStory popup render
+  //
+
+  _popupRender(targetMarker, content, options, runStory) {
+    const popup = L.popup(options).setContent(content);
+
+    popup.addEventListener("add", function () {
+      const wrapper = this._wrapper;
+      const tip = this._tip;
+      if (runStory) {
+        console.log(wrapper);
+        wrapper.classList.add("runStory--wrapper--tip");
+        tip.classList.add("runStory--wrapper--tip");
+      }
+    });
+    targetMarker.bindPopup(popup).openPopup();
   }
+
+  //
+  // Notes textarea
+  //
 
   _renderNotesArea(clickE) {
     this.#notesArea.value = this.#notes;
@@ -235,6 +257,10 @@ class App {
     this.#notesArea.focus();
   }
 
+  //
+  // Notes text
+  //
+
   _renderNotesText(clickE) {
     this.#notes = this.#notesArea.value;
     this.#notesText.innerText = this.#notes;
@@ -247,6 +273,10 @@ class App {
 
     window.localStorage.setItem("notes", JSON.stringify(this.#notes));
   }
+
+  //
+  // RunStory data generation
+  //
 
   _generateWorkout() {
     const dateSeparator = dateInput.value.split("-");
@@ -275,17 +305,24 @@ class App {
     this._markerRender(
       this.#targetMap,
       [lat, lng],
-      "./initposicon.png",
-      "You clicked here",
-      this.#popupOpts
+      "./assets/runStory.png",
+      `RunStory on ${
+        months[workout.date.getMonth()]
+      } ${workout.date.getDate()}, ${workout.date.getFullYear()}`,
+      this.#popupOpts,
+      true
     );
   }
+
+  //
+  // Adding RunStory to the list
+  //
 
   _generateListItem(runstory) {
     return `<li class="runstory">
     <h4 class="runstory--header">Runstory on ${
       months[runstory.date.getMonth()]
-    } ${runstory.date.getDate()}, ${runstory.date.getFullYear()}</h4>
+    } ${runstory.date.getDate()}, ${runstory.date.getFullYear()}:</h4>
     <div class="runstory--content">
       <span class="runstory--datapiece">
         <img
@@ -319,6 +356,52 @@ class App {
     </div>
     </li>
     `;
+  }
+
+  _validateInput(val, element) {
+    if (element.type === "date")
+      return val.length === 0 ? this._showErrorPopup(element) : true;
+    return isNaN(Number(val)) || val.length === 0
+      ? this._showErrorPopup(element)
+      : true;
+  }
+
+  _showErrorPopup(element) {
+    const closestPar = element.closest(".workout-form--labels");
+    let fieldName = element.classList[1];
+    fieldName = fieldName[0].toUpperCase() + fieldName.slice(1);
+
+    const fieldType = element.type;
+
+    const errorText = `Please, input ${
+      fieldType === "date"
+        ? ` your RunStory date in the "${fieldName}" field.`
+        : `positive integer value in the "${fieldName}" field.`
+    }`;
+
+    closestPar.insertAdjacentHTML(
+      "beforeend",
+      `<span class="validation-error">
+    <img
+      class="validation-error--icon"
+      src="./assets/close.png"
+      alt="Close icon"
+    />
+    <p class="validation-error--text">${errorText}</p>
+    <span class="validation-error--pointer"></span>
+  </span>`
+    );
+    element.value = "";
+    element.focus();
+    setTimeout(() => {
+      const errorMessage = document.querySelector(".validation-error");
+      errorMessage.style.opacity = "0";
+      setTimeout(() => {
+        errorMessage.remove();
+      }, 1100);
+    }, 2000);
+
+    return;
   }
 }
 
