@@ -55,8 +55,8 @@ class App {
     closeOnClick: false,
     closeOnEscapeKey: false,
     offset: [0, -20],
-    minHeight: rem * 3,
-    minWidth: rem * 12,
+    minHeight: rem * 2,
+    minWidth: rem * 10,
   };
   #notesArea;
   #notesText;
@@ -105,13 +105,14 @@ class App {
       "submit",
       function (submitE) {
         submitE.preventDefault();
-        discard.style.display = "none";
         if (
           this._validateInput(distanceInput.value, distanceInput) &&
           this._validateInput(durationInput.value, durationInput) &&
           this._validateInput(dateInput.value, dateInput)
-        )
+        ) {
+          discard.style.display = "none";
           this._generateWorkout();
+        }
       }.bind(this)
     );
 
@@ -122,6 +123,9 @@ class App {
         discard.style.display = "none";
         formHidder.style.height = "100%";
         formHint.style.display = "block";
+        distanceInput.value = "";
+        durationInput.value = "";
+        dateInput.value = "";
       }.bind(this)
     );
 
@@ -206,7 +210,7 @@ class App {
   // RunStory marker render
   //
 
-  _markerRender(targetMap, coords, url, popupContent, popupOptions) {
+  _markerRender(targetMap, coords, url, popupContent, popupOptions, storyRun) {
     const marker = L.marker(coords, {
       icon: L.icon({
         iconUrl: url,
@@ -216,15 +220,26 @@ class App {
 
     // adding popup to a marker
 
-    this._popupRender(marker, popupContent, popupOptions);
+    this._popupRender(marker, popupContent, popupOptions, storyRun);
   }
 
   //
   // RunStory popup render
   //
 
-  _popupRender(targetMarker, content, options) {
-    targetMarker.bindPopup(L.popup(options).setContent(content)).openPopup();
+  _popupRender(targetMarker, content, options, runStory) {
+    const popup = L.popup(options).setContent(content);
+
+    popup.addEventListener("add", function () {
+      const wrapper = this._wrapper;
+      const tip = this._tip;
+      if (runStory) {
+        console.log(wrapper);
+        wrapper.classList.add("runStory--wrapper--tip");
+        tip.classList.add("runStory--wrapper--tip");
+      }
+    });
+    targetMarker.bindPopup(popup).openPopup();
   }
 
   //
@@ -290,9 +305,12 @@ class App {
     this._markerRender(
       this.#targetMap,
       [lat, lng],
-      "./initposicon.png",
-      "You clicked here",
-      this.#popupOpts
+      "./assets/runStory.png",
+      `RunStory on ${
+        months[workout.date.getMonth()]
+      } ${workout.date.getDate()}, ${workout.date.getFullYear()}`,
+      this.#popupOpts,
+      true
     );
   }
 
@@ -304,7 +322,7 @@ class App {
     return `<li class="runstory">
     <h4 class="runstory--header">Runstory on ${
       months[runstory.date.getMonth()]
-    } ${runstory.date.getDate()}, ${runstory.date.getFullYear()}</h4>
+    } ${runstory.date.getDate()}, ${runstory.date.getFullYear()}:</h4>
     <div class="runstory--content">
       <span class="runstory--datapiece">
         <img
