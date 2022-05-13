@@ -234,7 +234,6 @@ class App {
       const wrapper = this._wrapper;
       const tip = this._tip;
       if (runStory) {
-        console.log(wrapper);
         wrapper.classList.add("runStory--wrapper--tip");
         tip.classList.add("runStory--wrapper--tip");
       }
