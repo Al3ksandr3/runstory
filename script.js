@@ -120,6 +120,7 @@ class App {
       "click",
       function (clickE) {
         this.#mapEvent = undefined;
+        discard.style.display = "none";
         formHidder.style.height = "100%";
         formHint.style.display = "block";
         distanceInput.value = "";
@@ -297,6 +298,9 @@ class App {
     distanceInput.value = "";
     durationInput.value = "";
     dateInput.value = "";
+
+    dateInput.blur();
+
     discard.style.display = "none";
     formHidder.style.height = "100%";
     formHint.style.display = "block";
@@ -342,7 +346,7 @@ class App {
         <p class="runstory--datapiece--number">${runstory.duration}</p>
         <p class="runstory--datapiece--unit">min</p>
       </span>
-      <span class="runstory--datapiece margin">
+      <span class="runstory--datapiece expanded margin">
         <img
           class="runstory--datapiece--icon"
           src="./assets/speedometer.png"

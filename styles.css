@@ -282,6 +282,7 @@ body {
   padding: 1rem;
   overflow-y: auto;
   background-color: var(--main-color);
+  overflow-y: auto;
 }
 
 .workouts-list--main {
@@ -318,11 +319,15 @@ body {
   justify-content: flex-start;
 }
 
+.runstory--datapiece.expanded {
+  width: 30%;
+}
+
 .runstory--datapiece {
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 25%;
+  width: 20%;
   justify-content: space-evenly;
 }
 
@@ -428,4 +433,16 @@ body {
 
 .submitBtn:hover {
   opacity: 0.8;
+}
+
+::-webkit-scrollbar {
+  width: 1rem;
+}
+::-webkit-scrollbar-thumb {
+  background-color: gold;
+  border-radius: 2rem;
+}
+
+::-webkit-scrollbar-button {
+  height: 1rem;
 }
