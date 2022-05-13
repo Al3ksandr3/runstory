@@ -271,7 +271,7 @@ class App {
     this.#notesArea.classList.add("hidden");
     this.#submitBtn.classList.add("hidden");
 
-    window.localStorage.setItem("notes", JSON.stringify(this.#notes));
+    // window.localStorage.setItem("notes", JSON.stringify(this.#notes));
   }
 
   //
@@ -379,7 +379,7 @@ class App {
     const errorText = `Please, input ${
       fieldType === "date"
         ? ` your RunStory date in the "${fieldName}" field.`
-        : `positive integer value in the "${fieldName}" field.`
+        : `positive numeric value in the "${fieldName}" field.`
     }`;
 
     closestPar.insertAdjacentHTML(
